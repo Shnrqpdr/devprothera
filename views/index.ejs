@@ -8,30 +8,14 @@
         width: 50px;
       }
     </style>
-    <title>Lista de ícones</title>
+    <title>Prothera</title>
   </head>
   <body>
+    <%- include('./components/nav'); %>
     <main class="container-fluid">
-      <div class="container">
-        <input
-          type="text"
-          class="form-control form-control-lg my-5"
-          id="procurar"
-          placeholder="Procurar"
-          aria-label="Procurar"
-        />
+      
 
-        <div class="row">
-          <% icons.forEach(function(icon) { %>
-          <div class="col-sm-3 mb-3 icone">
-            <%- icon.data %>
-            <span class="file-name"><%= icon.file %></span>
-          </div>
-          <% })%>
-        </div>
-      </div>
-
-      <%- include('./components/footer'); %>
     </main>
+    <%- include('./components/footer'); %>
   </body>
 </html>

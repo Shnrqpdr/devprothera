@@ -16,6 +16,10 @@ async function getFileContent(folderName, fileName) {
 }
 
 app.get("/", async (req, res) => {
+    res.render("index");
+});
+
+app.get("/icones", async (req, res) => {
     const folderName = 'C:/Users/Projedata-179/Documents/prothera/prothera/frontend/src/assets/icons';
     const icons = [];
 
@@ -26,7 +30,7 @@ app.get("/", async (req, res) => {
             data: await getFileContent(folderName, file)
         })
     }
-    res.render("index", {icons});
+    res.render("icones", {icons});
 }); 
 
 app.listen(3000, () => {

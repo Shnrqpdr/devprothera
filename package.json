@@ -2,7 +2,7 @@
   "name": "dev-aux",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start2": "nodemon -e js,ejs",
     "start": "nodemon"
