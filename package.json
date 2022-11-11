@@ -1,8 +1,9 @@
 {
-  "name": "dev-aux",
+  "name": "devprothera",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start2": "nodemon -e js,ejs",
     "start": "nodemon"
