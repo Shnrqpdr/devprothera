@@ -1,5 +1,5 @@
 import icones from './icones.js'
-import traducao from './traducao.js'
+import traducoes from './traducoes.js'
 
 icones()
-traducao()
+traducoes()

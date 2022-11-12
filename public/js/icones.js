@@ -1,4 +1,6 @@
 export default () => {
+    if(!/icones/gi.test(window.location.href)) return;
+
     $("#procurar").on("input", function(){
         const texto = $(this).val();
         const regex = new RegExp(texto, 'i');

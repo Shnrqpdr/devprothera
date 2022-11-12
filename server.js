@@ -1,4 +1,4 @@
-import router from './router/router.js';
+import router from './router/index.js';
 import express from 'express';
 import path, {dirname} from 'path';
 

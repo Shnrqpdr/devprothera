@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <%- include('./components/head'); %>
+    <title>Traduções</title>
+  </head>
+
+  <body>
+    <%- include('./components/nav'); %>
+    <main class="container-fluid p-5">
+      <div id="traducoes" class="d-none"><%- JSON.stringify(traducoes) %></div>
+      <table class="table table-responsive" id="tabela"></table>
+    </main>
+    <%- include('./components/footer'); %>
+  </body>
+</html>
