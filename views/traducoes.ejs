@@ -9,7 +9,35 @@
     <%- include('./components/nav'); %>
     <main class="container-fluid p-5">
       <div id="traducoes" class="d-none"><%- JSON.stringify(traducoes) %></div>
-      <table class="table table-responsive" id="tabela"></table>
+
+      <table class="table table-striped table-responsive" id="tabela"></table>
+
+      <div class="my-5"></div>
+
+      <section class="row fixed-bottom mx-5">
+        <div class="col-12 bg-white rounded-top p-3">
+          <div class="row">
+            <div class="col-auto hstack gap-2 mx-auto">
+              <button id="btnDesmarcar" class="btn btn-default hstack gap-1" style="display: none;">
+                <i class="material-icons">indeterminate_check_box</i>
+                Desmarcar todos
+              </button>
+              <button id="btnAdicionar" class="btn btn-primary hstack gap-1">
+                <i class="material-icons">add</i>
+                Adicionar
+              </button>
+              <button id="btnExcluir" class="btn btn-danger hstack gap-1" style="display: none;">
+                <i class="material-icons">delete</i>
+                Excluir
+              </button>
+              <button id="btnSalvar" class="btn btn-success hstack gap-1" style="display: none;">
+                <i class="material-icons">send</i>
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
     <%- include('./components/footer'); %>
   </body>

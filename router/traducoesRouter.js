@@ -8,4 +8,9 @@ traducoesRouter.get('/', async (req, res) => {
     res.render('traducoes', {traducoes})
 });
 
+traducoesRouter.post('/', async (req, res) => {
+    await traducoesController.salvar(req.body);
+    res.json({success : "Updated Successfully", status : 200});
+});
+
 export default traducoesRouter

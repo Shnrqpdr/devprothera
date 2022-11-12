@@ -4,6 +4,7 @@ import path, {dirname} from 'path';
 
 const app = express();
 
+app.use(express.json());
 app.use(express.static(path.join(dirname(''), "public")));
 app.set("view engine", "ejs");
 
