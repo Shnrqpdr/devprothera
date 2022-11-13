@@ -7,10 +7,63 @@
 
   <body>
     <%- include('./components/nav'); %>
+
+    <div class="modal fade" tabindex="-1" id="modalTraducao">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Inserir nova tradução</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formularioNovaTraducao">
+              <div class="mb-3">
+                <label for="inputChave" class="form-label">Chave<span class="text-danger">*</span></label>
+                <input type="text" name="chave" class="form-control" id="inputChave" />
+              </div>
+              <div class="mb-3">
+                <label for="inputPt" class="form-label">Português</label>
+                <input type="text" name="pt" class="form-control" id="inputPt" />
+              </div>
+              <div class="mb-3">
+                <label for="inputEn" class="form-label">Inglês</label>
+                <input type="text" name="en" class="form-control" id="inputEn" />
+              </div>
+              <div class="mb-3">
+                <label for="inputEs" class="form-label">Espanhol</label>
+                <input type="text" name="es" class="form-control" id="inputEs" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="btnInserirTraducao"
+            >
+              Inserir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <main class="container-fluid p-5">
       <div id="traducoes" class="d-none"><%- JSON.stringify(traducoes) %></div>
 
-      <table class="table table-striped table-responsive" id="tabela"></table>
+      <table class="table table-responsive" id="tabela"></table>
 
       <div class="my-5"></div>
 
@@ -18,19 +71,35 @@
         <div class="col-12 bg-white rounded-top p-3">
           <div class="row">
             <div class="col-auto hstack gap-2 mx-auto">
-              <button id="btnDesmarcar" class="btn btn-default hstack gap-1" style="display: none;">
+              <button
+                id="btnDesmarcar"
+                class="btn btn-default hstack gap-1"
+                style="display: none"
+              >
                 <i class="material-icons">indeterminate_check_box</i>
                 Desmarcar todos
               </button>
-              <button id="btnAdicionar" class="btn btn-primary hstack gap-1">
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#modalTraducao"
+                class="btn btn-primary hstack gap-1"
+              >
                 <i class="material-icons">add</i>
                 Adicionar
               </button>
-              <button id="btnExcluir" class="btn btn-danger hstack gap-1" style="display: none;">
+              <button
+                id="btnExcluir"
+                class="btn btn-danger hstack gap-1"
+                style="display: none"
+              >
                 <i class="material-icons">delete</i>
                 Excluir
               </button>
-              <button id="btnSalvar" class="btn btn-success hstack gap-1" style="display: none;">
+              <button
+                id="btnSalvar"
+                class="btn btn-success hstack gap-1"
+                style="display: none"
+              >
                 <i class="material-icons">send</i>
                 Salvar
               </button>

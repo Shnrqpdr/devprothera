@@ -1,5 +1,6 @@
 import { CAMINHO_ARQUIVO_TRADUCOES } from '../constants.js';
 import fs from 'fs';
+import { objetoVazio } from '../public/js/utils.js';
 
 export default {
     getTraducoes: async function () {
@@ -11,6 +12,7 @@ export default {
 
         Object.keys(novasTraducoes).forEach((idioma) => {
             Object.keys(novasTraducoes[idioma]).forEach((chave) => {
+                traducoes[idioma] = objetoVazio(traducoes[idioma]);
                 traducoes[idioma][chave] = novasTraducoes[idioma][chave];
             });
         });
@@ -24,8 +26,8 @@ export default {
         Object.keys(chavesModificadas).forEach((chave) => {
             const { novaChave, acao } = chavesModificadas[chave];
             Object.keys(traducoes).forEach((idioma) => {
-                console.log(idioma, chave, novaChave, acao);
                 if (acao === 'alterar' && novaChave) {
+                    traducoes[idioma] = objetoVazio(traducoes[idioma]);
                     traducoes[idioma][novaChave] = traducoes[idioma][chave];
                 }
 

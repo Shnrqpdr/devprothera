@@ -1,13 +1,7 @@
+import { parseData, primeiraLetraMaiuscula, primeiraLetraMinuscula, removerAcentos } from './utils.js';
+
 export default () => {
     if (!/traducoes/gi.test(window.location.href)) return;
-
-    function parseData(data) {
-        try {
-            return JSON.parse(data);
-        } catch (e) {
-            return null
-        }
-    }
 
     const traducoes = parseData($("#traducoes").text());
     const chavesMensagensPt = Object.keys(traducoes.pt);
@@ -18,6 +12,25 @@ export default () => {
     const novasTraducoes = {};
     const chavesModificadas = {}
 
+    const formularioTraducao = {
+        gerarChaveAutomatica(idInputModelo) {
+            let mensagem = primeiraLetraMinuscula($(idInputModelo).val()).split(' ');
+            for (let i = 1; i < mensagem.length; i++) {
+                mensagem[i] = primeiraLetraMaiuscula(mensagem[i]);
+            }
+            return removerAcentos(mensagem.join(''));
+        },
+        serialize() {
+            const traducao = {}
+            $("#formularioNovaTraducao input").each(function () {
+                const name = $(this).attr('name');
+                const value = $(this).val();
+                traducao[name] = value;
+            });
+            return traducao;
+        }
+    }
+
     const verificarTraducao = function (traducao) {
         $(Object.keys(traducao)).each((indice, idioma) => {
             const mensagem = traducao[idioma];
@@ -26,12 +39,12 @@ export default () => {
     }
 
     const adicionarNovaTraducao = function (params) {
-        const { idioma, chave, mensagem } = params;
+        const { coluna, chave, mensagem } = params;
 
-        if (novasTraducoes[idioma]) {
-            novasTraducoes[idioma][chave] = mensagem;
+        if (novasTraducoes[coluna]) {
+            novasTraducoes[coluna][chave] = mensagem;
         } else {
-            novasTraducoes[idioma] = { [chave]: mensagem }
+            novasTraducoes[coluna] = { [chave]: mensagem }
         }
 
         $("#tabela").trigger("traducao:alterada", params);
@@ -51,6 +64,35 @@ export default () => {
             modificarChaves({ chave: dados.chave, acao: 'excluir' });
         });
         desmarcarTodos()
+    }
+
+    const inserirNovaTraducao = function () {
+        const traducao = formularioTraducao.serialize();
+
+        if (!traducao.chave) return;
+        if (existeChaveDuplicada(traducao.chave)) return alert('Chave já existe');
+
+        verificarTraducao(traducao);
+
+        const novaLinha = tabela.row.add(traducao).node();
+        $(novaLinha).addClass('text-primary');
+
+        $.each(traducao, function(coluna, mensagem){
+            if(mensagem && coluna !== 'chave'){
+                adicionarNovaTraducao({coluna, chave: traducao.chave, mensagem});
+            }
+        });
+        
+        tabela.draw(false);
+        tabela.page.jumpToData( traducao.chave, 1 );
+
+        $("#modalTraducao input").val('');
+        $("#modalTraducao").modal('hide');
+    }
+
+    const existeChaveDuplicada = function(chave) {
+        const novasChavesPt = Object.keys(novasTraducoes.pt || {});
+        return chavesMensagensPt.includes(chave) || novasChavesPt.includes(chave)
     }
 
     const salvarTraducoes = function () {
@@ -91,7 +133,7 @@ export default () => {
             if (coluna === 'chave') {
                 modificarChaves({ chave, novaChave: novoValorCelula, acao: 'alterar' });
             } else {
-                adicionarNovaTraducao({ idioma: coluna, chave, mensagem: novoValorCelula });
+                adicionarNovaTraducao({ coluna, chave, mensagem: novoValorCelula });
             }
         })
     }
@@ -135,17 +177,13 @@ export default () => {
             }
         ],
         initComplete: () => {
-            tabela.on('select deselect', function (e, dt, type, indexes) {
+            tabela.on('select deselect', function () {
                 verificarLinhasSelecionadas();
             });
         },
         createdRow: (row, data) => {
             $(row).attr("id", data.chave);
         }
-    });
-
-    $("#tabela").on("traducao:alterada", function (e, params) {
-        $("#btnSalvar").show();
     });
 
     $(chavesMensagensPt).each((indice, chave) => {
@@ -159,11 +197,21 @@ export default () => {
         tabela.row.add(linhaTraducao).draw(false);
     });
 
+    $("#tabela").on("traducao:alterada", function (e, params) {
+        $("#btnSalvar").show();
+    });
+
     $("#btnSalvar").click(salvarTraducoes);
 
     $("#btnDesmarcar").click(desmarcarTodos);
 
     $("#btnExcluir").click(excluirTraducoes);
+
+    $("#btnInserirTraducao").click(inserirNovaTraducao);
+
+    $("#inputPt").on('input', function () {
+        $("#inputChave").val(formularioTraducao.gerarChaveAutomatica("#inputPt"))
+    })
 
     console.log('traducoesIncompletas', traducoesIncompletas)
 }
