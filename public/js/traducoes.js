@@ -61,6 +61,7 @@ export default () => {
             const linha = tabela.row(rowIdx);
             const dados = linha.data();
             $(linha.node()).addClass('text-danger');
+            $(linha.node()).find('td').off();
             modificarChaves({ chave: dados.chave, acao: 'excluir' });
         });
         desmarcarTodos()
