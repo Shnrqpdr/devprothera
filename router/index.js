@@ -4,11 +4,10 @@ import traducoesRouter from './traducoesRouter.js';
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    res.render("index");
+router.use('/api/icones', iconesRouter);
+router.use('/api/traducoes', traducoesRouter);
+router.get("*", async (req, res) => {
+    res.sendFile('index.html', { root: './views/' });
 });
-
-router.use('/icones', iconesRouter);
-router.use('/traducoes', traducoesRouter);
 
 export default router

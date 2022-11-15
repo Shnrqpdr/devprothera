@@ -1,0 +1,19 @@
+<main class="container-fluid">
+  <div class="container">
+    <input
+      type="text"
+      class="form-control form-control-lg my-5"
+      id="procurar"
+      placeholder="Procurar"
+      aria-label="Procurar"
+      v-model="pesquisa"
+    />
+
+    <div class="row" v-if="icones.length">
+      <div class="col-sm-3 mb-3 d-flex align-items-center" v-for="icone in iconesFiltrados">
+        <div v-html="icone.svg"></div>
+        <div class="m-4"> {{ icone.nomeArquivo }} </div>
+      </div>
+    </div>
+  </div>
+</main>

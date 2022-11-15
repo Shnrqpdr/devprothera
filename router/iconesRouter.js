@@ -5,7 +5,7 @@ const iconesRouter = express.Router();
 
 iconesRouter.get('/', async (req, res) => {
     const icones = await iconesController.getIcones();
-    res.render('icones', {icones})
+    res.json({icones, status: 200});
 });
 
 export default iconesRouter

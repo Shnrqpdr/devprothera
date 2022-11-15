@@ -2,3 +2,9 @@ body {
     background-color: #cecece;
     font-size: .875rem;
 }
+
+svg {
+    height: 50px;
+    width: 50px;
+    fill: black;
+}
