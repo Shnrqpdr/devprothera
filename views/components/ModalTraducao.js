@@ -6,6 +6,9 @@ const ModalTraducao = async () => {
 
   return ({
     template: template,
+    props: {
+      traducao: { type: Object, default: null },
+    },
     data () {
       return {
         modal: null,
@@ -21,11 +24,21 @@ const ModalTraducao = async () => {
       this.pt = '';
       this.en = '';
       this.es = '';
+
+      document.getElementById('modalTraducao').addEventListener('hidden.bs.modal', () => {
+        this.$emit('fechado');
+      });
     },
     methods: {
-      adicionar () {
+      salvar () {
         if (!(this.chave && this.pt)) return;
-        this.$emit('adicionar', { chave: this.chave, pt: this.pt, en: this.en, es: this.es, })
+        this.$emit('salvar', {
+          id: this.traducao?.id,
+          chave: this.chave,
+          pt: this.pt,
+          en: this.en,
+          es: this.es,
+        });
         this.modal.hide();
       },
       gerarChaveAutomatica () {
@@ -34,6 +47,22 @@ const ModalTraducao = async () => {
           mensagem[i] = primeiraLetraMaiuscula(mensagem[i]);
         }
         this.chave = removerAcentos(mensagem.join(''));
+      }
+    },
+    watch: {
+      traducao: {
+        handler (traducao) {
+          this.chave = this.traducao?.chave || '';
+          this.pt = this.traducao?.pt || '';
+          this.en = this.traducao?.en || '';
+          this.es = this.traducao?.es || '';
+
+          if (traducao) {
+            this.modal?.show();
+          }
+        },
+        deep: true,
+        immediate: true,
       }
     }
   })

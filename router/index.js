@@ -7,7 +7,7 @@ const router = express.Router();
 router.use('/api/icones', iconesRouter);
 router.use('/api/traducoes', traducoesRouter);
 router.get("*", async (req, res) => {
-    res.sendFile('index.html', { root: './views/' });
+  res.sendFile('index.html', { root: './views/' });
 });
 
 export default router

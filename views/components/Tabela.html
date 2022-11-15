@@ -1,0 +1,14 @@
+<input class="form-control" type="text" placeholder="Pesquisar" v-model="pesquisa" />
+<easy-data-table :headers="cabecalho" :items="itens" :search-value="pesquisa" @click-row="exibirInformacoesLinha"
+  alternating buttons-pagination>
+  <template #item-opcoes="item">
+    <div class="hstack gap-2">
+      <button class="btn p-0" @click="editar(item)" v-if="item.acao !== 'excluido'">
+        <i class="material-icons">edit_square</i>
+      </button>
+      <button class="btn p-0" @click="excluir(item)" v-if="item.acao !== 'excluido'">
+        <i class="material-icons">delete</i>
+      </button>
+    </div>
+  </template>
+</easy-data-table>

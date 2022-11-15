@@ -1,6 +1,5 @@
+import fs from 'fs'; 
 import { CAMINHO_ARQUIVO_TRADUCOES } from '../constants.js';
-import fs from 'fs';
-import { objetoVazio } from '../public/js/utils.js';
 
 export default {
   getTraducoes: async function () {
@@ -16,11 +15,18 @@ export default {
     try {
       const traducoes = await this.getTraducoes();
 
-      Object.keys(novasTraducoes).forEach((idioma) => {
-        Object.keys(novasTraducoes[idioma]).forEach((chave) => {
-          traducoes[idioma] = objetoVazio(traducoes[idioma]);
-          traducoes[idioma][chave] = novasTraducoes[idioma][chave];
-        });
+      novasTraducoes.forEach(novaTraducao => {
+        const { id, chave, pt, es, en, acao } = novaTraducao;
+        
+        if (acao === 'excluido' || id !== chave) {
+          delete traducoes.pt[id];
+          delete traducoes.es[id];
+          delete traducoes.en[id];
+        } 
+
+        traducoes.pt[chave] = pt;
+        traducoes.es[chave] = es;
+        traducoes.en[chave] = en;
       });
 
       fs.writeFileSync(CAMINHO_ARQUIVO_TRADUCOES, JSON.stringify(traducoes, null, 4));
@@ -30,27 +36,4 @@ export default {
       return false;
     }
   },
-  alterar: async function (chavesModificadas) {
-    try {
-      const traducoes = await this.getTraducoes();
-
-      Object.keys(chavesModificadas).forEach((chave) => {
-        const { novaChave, acao } = chavesModificadas[chave];
-        Object.keys(traducoes).forEach((idioma) => {
-          if (acao === 'alterar' && novaChave) {
-            traducoes[idioma] = objetoVazio(traducoes[idioma]);
-            traducoes[idioma][novaChave] = traducoes[idioma][chave];
-          }
-
-          delete traducoes[idioma][chave];
-        })
-      })
-
-      fs.writeFileSync(CAMINHO_ARQUIVO_TRADUCOES, JSON.stringify(traducoes, null, 4));
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  }
 }
