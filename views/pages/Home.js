@@ -3,8 +3,8 @@ const Home = async () => {
   template = await template.text();
   return ({
     template: template,
-    setup() {
-      
+    setup () {
+
     }
   })
 }

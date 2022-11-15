@@ -11,7 +11,7 @@ const Traducoes = async () => {
       "ModalTraducao": await ModalTraducao(),
       "Tabela": await Tabela(),
     },
-    data() {
+    data () {
       return {
         traducoes: [],
         novasTraducoes: {},
@@ -28,11 +28,11 @@ const Traducoes = async () => {
         }
       }
     },
-    mounted() {
+    mounted () {
       this.traducoes = this.buscarTraducoes();
     },
     methods: {
-      async buscarTraducoes() {
+      async buscarTraducoes () {
         const response = await fetch('/api/traducoes', {
           method: 'GET',
           headers: {
@@ -44,7 +44,7 @@ const Traducoes = async () => {
         const { traducoes } = await response.json();
         return traducoes;
       },
-      adicionarTraducao(dados) {
+      adicionarTraducao (dados) {
         console.log(dados);
       }
     }

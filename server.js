@@ -1,6 +1,6 @@
 import router from './router/index.js';
 import express from 'express';
-import path, {dirname} from 'path';
+import path, { dirname } from 'path';
 
 const app = express();
 
