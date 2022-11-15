@@ -5,7 +5,7 @@ const traducoesRouter = express.Router();
 
 traducoesRouter.get('/', async (req, res) => {
     const traducoes = await traducoesController.getTraducoes();
-    res.render('traducoes', {traducoes})
+    res.json({traducoes, status: 200});
 });
 
 traducoesRouter.post('/', async (req, res) => {

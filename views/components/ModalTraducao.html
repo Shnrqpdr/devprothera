@@ -1,0 +1,75 @@
+<div class="modal fade" tabindex="-1" id="modalTraducao">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Inserir nova tradução</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="formularioNovaTraducao">
+          <div class="mb-3">
+            <label for="inputChave" class="form-label"
+              >Chave<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              name="chave"
+              class="form-control"
+              id="inputChave"
+              v-model="chave"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputPt" class="form-label">Português</label>
+            <input
+              type="text"
+              name="pt"
+              class="form-control"
+              id="inputPt"
+              v-model="pt"
+              @input="gerarChaveAutomatica"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputEn" class="form-label">Inglês</label>
+            <input
+              type="text"
+              name="en"
+              class="form-control"
+              id="inputEn"
+              v-model="en"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputEs" class="form-label">Espanhol</label>
+            <input
+              type="text"
+              name="es"
+              class="form-control"
+              id="inputEs"
+              v-model="es"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="btnInserirTraducao"
+          @click="adicionar"
+        >
+          Inserir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
