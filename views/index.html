@@ -4,37 +4,50 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link href="https://unpkg.com/vue3-easy-data-table/dist/style.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+
     <title>Dev Prothera</title>
   </head>
   <body>
-    <!-- material icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="./styles.css">
-    <script src="https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js"></script>
-    <script src="https://unpkg.com/vue-router@4.1.6/dist/vue-router.global.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script type="module" src="./index.js"></script>
-
     <div id="app">
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container-fluid">
-                <router-link to="/" class="navbar-brand">Prothera</router-link>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <router-link to="/icones" class="nav-link">ícones</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link to="/traducoes" class="nav-link">traduções</router-link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <router-link to="/" class="navbar-brand">Prothera</router-link>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <router-link to="/icones" class="nav-link">ícones</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/traducoes" class="nav-link">traduções</router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
+
+    <script src="https://unpkg.com/vue@3.2.1/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/vue-router@4.1.6/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue3-easy-data-table"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
+    
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
