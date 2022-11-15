@@ -66,27 +66,32 @@ const Traducoes = async () => {
         });
       },
       excluirTraducao (traducao) {
-        const traducaoExcluida = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-        traducaoExcluida.acao = 'excluido';
-        console.log(traducaoExcluida)
+        const traducaoItem = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
+        traducaoItem.acao = 'excluido';
+        const traducaoNova = this.novasTraducoes.find((linhaTraducao) => linhaTraducao.id === traducao.id);
+        if (traducaoNova) traducaoNova.acao = 'excluido';
+        else this.novasTraducoes.push(traducaoItem);
       },
       editarTraducao (traducao) {
         this.traducao = traducao;
       },
       salvarTraducao (traducao) {
         if (traducao.id) {
-          const traducaoAntiga = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-          traducaoAntiga.chave = traducao.chave;
-          traducaoAntiga.pt = traducao.pt;
-          traducaoAntiga.es = traducao.es;
-          traducaoAntiga.en = traducao.en;
+          const traducaoItem = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
+          traducaoItem.chave = traducao.chave;
+          traducaoItem.pt = traducao.pt;
+          traducaoItem.es = traducao.es;
+          traducaoItem.en = traducao.en;
 
           const novaTraducao = this.novasTraducoes.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-          novaTraducao.chave = traducao.chave;
-          novaTraducao.pt = traducao.pt;
-          novaTraducao.es = traducao.es;
-          novaTraducao.en = traducao.en;
-
+          if (novaTraducao) {
+            novaTraducao.chave = traducao.chave;
+            novaTraducao.pt = traducao.pt;
+            novaTraducao.es = traducao.es;
+            novaTraducao.en = traducao.en;
+          } else {
+            this.novasTraducoes.push(traducao);
+          }
         } else {
           const novaTraducao = { ...traducao, id: traducao.chave };
           this.tabela.itens.push(novaTraducao);
@@ -94,7 +99,6 @@ const Traducoes = async () => {
         }
 
         this.verificarTraducao(traducao);
-        console.log(this.novasTraducoes)
       },
       async salvarNovasTraducoes () {
         await fetch('/api/traducoes', {

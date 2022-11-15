@@ -1,4 +1,4 @@
-import fs from 'fs'; 
+import fs from 'fs';
 import { CAMINHO_ARQUIVO_TRADUCOES } from '../constants.js';
 
 export default {
@@ -17,16 +17,18 @@ export default {
 
       novasTraducoes.forEach(novaTraducao => {
         const { id, chave, pt, es, en, acao } = novaTraducao;
-        
+
         if (acao === 'excluido' || id !== chave) {
           delete traducoes.pt[id];
           delete traducoes.es[id];
           delete traducoes.en[id];
-        } 
+        }
 
-        traducoes.pt[chave] = pt;
-        traducoes.es[chave] = es;
-        traducoes.en[chave] = en;
+        if (acao !== 'excluido') {
+          traducoes.pt[chave] = pt;
+          traducoes.es[chave] = es;
+          traducoes.en[chave] = en;
+        }
       });
 
       fs.writeFileSync(CAMINHO_ARQUIVO_TRADUCOES, JSON.stringify(traducoes, null, 4));
