@@ -19,7 +19,7 @@ const Traducoes = async () => {
         tabela: {
           cabecalho: [
             { text: "Chave", value: "chave", },
-            { text: "Portugês", value: "pt" },
+            { text: "Português", value: "pt" },
             { text: "Inglês", value: "en" },
             { text: "Espanhol", value: "es" },
             { text: "Opções", value: "opcoes", sortable: false },
