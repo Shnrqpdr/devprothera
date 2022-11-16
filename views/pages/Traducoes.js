@@ -18,10 +18,10 @@ const Traducoes = async () => {
         traducoesIncompletas: [],
         tabela: {
           cabecalho: [
-            { text: "Chave", value: "chave", },
-            { text: "Português", value: "pt" },
-            { text: "Inglês", value: "en" },
-            { text: "Espanhol", value: "es" },
+            { text: "Chave", value: "chave", sortable: true },
+            { text: "Português", value: "pt", sortable: true },
+            { text: "Inglês", value: "en", sortable: true },
+            { text: "Espanhol", value: "es", sortable: true },
             { text: "Opções", value: "opcoes", sortable: false },
           ],
           itens: [],
@@ -66,11 +66,17 @@ const Traducoes = async () => {
         });
       },
       excluirTraducao (traducao) {
-        const traducaoItem = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-        traducaoItem.acao = 'excluido';
+        traducao.acao = 'excluido';
+
+        this.tabela.itens = this.tabela.itens.filter((linhaTraducao) => linhaTraducao.id !== traducao.id);
+
         const traducaoNova = this.novasTraducoes.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-        if (traducaoNova) traducaoNova.acao = 'excluido';
-        else this.novasTraducoes.push(traducaoItem);
+
+        if (traducaoNova) {
+          traducaoNova.acao = 'excluido';
+        } else {
+          this.novasTraducoes.push(traducao);
+        }
       },
       editarTraducao (traducao) {
         this.traducao = traducao;
@@ -93,7 +99,7 @@ const Traducoes = async () => {
             this.novasTraducoes.push(traducao);
           }
         } else {
-          const novaTraducao = { ...traducao, id: traducao.chave };
+          const novaTraducao = { ...traducao, id: traducao.chave, acao: 'adicionado' };
           this.tabela.itens.unshift(novaTraducao);
           this.novasTraducoes.push(novaTraducao);
         }

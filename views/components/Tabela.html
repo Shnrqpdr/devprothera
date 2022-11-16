@@ -1,5 +1,6 @@
 <input class="form-control" type="text" placeholder="Pesquisar" v-model="pesquisa" />
 <easy-data-table :headers="cabecalho" :items="itens" :search-value="pesquisa" @click-row="exibirInformacoesLinha"
+  :body-row-class-name="funcaoClasseLinha"
   alternating buttons-pagination>
   <template #item-opcoes="item">
     <div class="hstack gap-2">

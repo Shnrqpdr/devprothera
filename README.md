@@ -10,7 +10,13 @@ Auxilia no desenvolvimento do projeto prothera com a listagem de ícones svg e m
 - Lista todos os ícones .svg do diretório indicado.
 - Lista, adiciona, atualiza e exclui traduções do arquivo.
 
+## Tecnologias
 
+- Node.js
+- Vue 3 - CDN
+- Vue-router 4 - CDN
+- Bootstrap 5 - CDN
+- Vue3-easy-data-table - CDN
 
 ## Como utilizar
 
@@ -56,5 +62,6 @@ Requisição: Array[mensagens]
 | `pt`      | `string` | A nova mensagem em português |
 | `en`      | `string` | A nova mensagem em inglês |
 | `es`      | `string` | A nova mensagem em espanhol |
+| `acao`      | `'excluido' \| 'adicionado' \| undefined` | Indicação de alteração da mensagem |
 
 

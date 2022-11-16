@@ -17,6 +17,11 @@ const Tabela = async () => {
       }
     },
     methods: {
+      funcaoClasseLinha (item, index) {
+        if (item.acao === 'adicionado') {
+          return 'text-primary';
+        }
+      },
       exibirInformacoesLinha (item) {
         console.log(item);
         this.$emit('linha-clicada', item);
