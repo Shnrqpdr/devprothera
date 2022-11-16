@@ -9,19 +9,19 @@
         <form id="formularioNovaTraducao">
           <div class="mb-3">
             <label for="inputChave" class="form-label">Chave<span class="text-danger">*</span></label>
-            <input type="text" name="chave" class="form-control" id="inputChave" v-model="chave" />
+            <input type="text" name="chave" class="form-control" lang="pt" id="inputChave" v-model="chave" />
           </div>
           <div class="mb-3">
             <label for="inputPt" class="form-label">Português</label>
-            <input type="text" name="pt" class="form-control" id="inputPt" v-model="pt" @input="gerarChaveAutomatica" />
+            <input type="text" name="pt" class="form-control" id="inputPt" lang="pt" v-model="pt" @input="gerarChaveAutomatica" />
           </div>
           <div class="mb-3">
             <label for="inputEn" class="form-label">Inglês</label>
-            <input type="text" name="en" class="form-control" id="inputEn" v-model="en" />
+            <input type="text" name="en" class="form-control" id="inputEn" lang="en" v-model="en" />
           </div>
           <div class="mb-3">
             <label for="inputEs" class="form-label">Espanhol</label>
-            <input type="text" name="es" class="form-control" id="inputEs" v-model="es" />
+            <input type="text" name="es" class="form-control" id="inputEs" lang="es" v-model="es" />
           </div>
         </form>
       </div>

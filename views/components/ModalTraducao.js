@@ -20,10 +20,6 @@ const ModalTraducao = async () => {
     },
     mounted () {
       this.modal = new bootstrap.Modal(document.getElementById('modalTraducao'));
-      this.chave = '';
-      this.pt = '';
-      this.en = '';
-      this.es = '';
 
       document.getElementById('modalTraducao').addEventListener('hidden.bs.modal', () => {
         this.$emit('fechado');
