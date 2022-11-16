@@ -94,7 +94,7 @@ const Traducoes = async () => {
           }
         } else {
           const novaTraducao = { ...traducao, id: traducao.chave };
-          this.tabela.itens.push(novaTraducao);
+          this.tabela.itens.unshift(novaTraducao);
           this.novasTraducoes.push(novaTraducao);
         }
 
