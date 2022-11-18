@@ -54,7 +54,9 @@ Response: { pt: { olaMundo: 'Olá mundo', }, ... }
 ```http
   POST /api/traducoes
 ```
-Requisição: Array[mensagens]
+```
+Request: [ {id: 'olaMundo', chave: 'olaMundo', pt: 'Olá Mundo', en: 'Hello World', es: 'Hola Mundo', acao: 'adicionado' }, ... ]
+```
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `id`      | `string` | O ID da tradução é a chave original que indica a mensagem no arquivo de traduções  |
