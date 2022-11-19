@@ -55,7 +55,7 @@ Response: { pt: { olaMundo: 'Olá mundo', }, ... }
   POST /api/traducoes
 ```
 ```
-Request: [ {id: 'olaMundo', chave: 'olaMundo', pt: 'Olá Mundo', en: 'Hello World', es: 'Hola Mundo', acao: 'adicionado' }, ... ]
+Request: [ {id: 'olaMundo', chave: 'olaMundo', pt: 'Olá Mundo', en: 'Hello World', es: 'Hola Mundo', acao: 'adicionar' }, ... ]
 ```
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
