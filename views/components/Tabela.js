@@ -1,3 +1,6 @@
+const { FilterMatchMode } = primevue.api;
+const { ref } = Vue;
+
 const Tabela = async () => {
   let template = await fetch("/components/Tabela.html")
   template = await template.text();
@@ -5,34 +8,59 @@ const Tabela = async () => {
   return ({
     template: template,
     components: {
-      EasyDataTable: window["vue3-easy-data-table"]
+      "p-inputtext": primevue.inputtext,
+      "p-datatable": primevue.datatable,
+      "p-column": primevue.column,
+      "p-contextmenu": primevue.contextmenu,
     },
     props: {
-      cabecalho: { type: Array, required: true },
+      colunas: { type: Array, required: true },
       itens: { type: Array, required: true },
     },
-    data () {
-      return {
-        pesquisa: '',
-      }
-    },
-    methods: {
-      funcaoClasseLinha (item, index) {
-        if (item.acao === 'adicionado') {
-          return 'text-primary';
+    setup (props, { emit }) {
+      const contextMenu = ref();
+
+      const traducaoSelecionada = ref();
+
+      const menuModelo = ref([
+        { label: 'Excluir linha', icon: 'pi pi-fw pi-times', command: () => excluir(traducaoSelecionada) }
+      ]);
+
+      const pesquisa = ref("");
+
+      const filtros = ref({
+        'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+      });
+
+      const aoContextualizarMenuLinha = (event) => {
+        contextMenu.value.show(event.originalEvent);
+      };
+
+      const aoFinalizarEdicaoCelula = (event) => {
+        const { data, newValue, field } = event;
+
+        if (newValue.trim().length > 0 && newValue !== data[field]) {
+          data[field] = newValue;
+          emit('aoEditar', event);
         }
-      },
-      exibirInformacoesLinha (item) {
-        console.log(item);
-        this.$emit('linha-clicada', item);
-      },
-      editar (item) {
-        this.$emit('editar', item);
-      },
-      excluir (item) {
-        this.$emit('excluir', item);
       }
-    }
+
+      const excluir = (event) => {
+        emit('aoExcluir', traducaoSelecionada.value);
+        traducaoSelecionada.value = null;
+      }
+
+      return {
+        contextMenu,
+        traducaoSelecionada,
+        menuModelo,
+        pesquisa,
+        filtros,
+        aoContextualizarMenuLinha,
+        aoFinalizarEdicaoCelula,
+        excluir,
+      };
+    },
   })
 }
 

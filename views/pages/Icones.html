@@ -1,13 +1,13 @@
-<main class="container-fluid">
-  <div class="container">
-    <input type="text" class="form-control form-control-lg my-5" id="procurar" placeholder="Procurar"
-      aria-label="Procurar" v-model="pesquisa" />
+<main class="p-5">
+  <span class="p-float-label my-5">
+    <p-inputtext id="pesquisa" type="text" v-model="pesquisa" class="w-3"></p-inputtext>
+    <label for="pesquisa">Pesquisa</label>
+  </span>
 
-    <div class="row" v-if="icones.length">
-      <div class="col-sm-3 mb-3 d-flex align-items-center" v-for="icone in iconesFiltrados">
-        <div v-html="icone.svg"></div>
-        <div class="m-4"> {{ icone.nomeArquivo }} </div>
-      </div>
+  <div class="grid card-container" v-if="icones.length">
+    <div class="sm:col-3 mb-3 flex align-items-center" v-for="icone in iconesFiltrados">
+      <div v-html="icone.svg"></div>
+      <div class="m-4">{{ icone.nomeArquivo }}</div>
     </div>
   </div>
 </main>

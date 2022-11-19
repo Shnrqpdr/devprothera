@@ -1,15 +1,38 @@
-<input class="form-control" type="text" placeholder="Pesquisar" v-model="pesquisa" />
-<easy-data-table :headers="cabecalho" :items="itens" :search-value="pesquisa" @click-row="exibirInformacoesLinha"
-  :body-row-class-name="funcaoClasseLinha"
-  alternating buttons-pagination>
-  <template #item-opcoes="item">
-    <div class="hstack gap-2">
-      <button class="btn p-0" @click="editar(item)" v-if="item.acao !== 'excluido'">
-        <i class="material-icons">edit_square</i>
-      </button>
-      <button class="btn p-0" @click="excluir(item)" v-if="item.acao !== 'excluido'">
-        <i class="material-icons">delete</i>
-      </button>
+<p-datatable 
+  :value="itens" 
+  :rows-per-page-options="[10,20,50]"
+  :rows="10"
+  :paginator="true" 
+  @cell-edit-complete="aoFinalizarEdicaoCelula"
+  context-menu 
+  v-model:context-menu-selection="traducaoSelecionada" 
+  @row-contextmenu="aoContextualizarMenuLinha"
+  class="p-datatable-sm. editable-cells-table w-full"
+  edit-mode="cell" 
+  current-page-report-template="Exibindo de {first} a {last} de {totalRecords}" 
+  v-model:filters="filtros" 
+  responsive-layout="scroll" 
+  paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+  >
+  <template #header>
+    <div class="flex justify-content-end">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <p-inputtext v-model="filtros['global'].value" placeholder="Pesquisar"></p-inputtext>
+      </span>
     </div>
   </template>
-</easy-data-table>
+  <p-column v-for="col of colunas" :field="col.field" :header="col.header" :sortable="true" :key="col.field"
+    style="width:25%">
+    <template #editor="{ data, field }">
+      <p-inputtext class="w-full" v-model="data[field]" autofocus></p-inputtext>
+    </template>
+    <template #empty>
+      Nenhuma tradução encontrada.
+    </template>
+    <template #loading>
+      Carregando...
+    </template>
+  </p-column>
+</p-datatable>
+<p-contextmenu :model="menuModelo" ref="contextMenu"></p-contextmenu>

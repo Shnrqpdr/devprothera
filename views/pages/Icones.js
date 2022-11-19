@@ -4,6 +4,9 @@ const Icones = async () => {
 
   return ({
     template: template,
+    components: {
+      "p-inputtext": primevue.inputtext
+    },
     data () {
       return {
         pesquisa: '',

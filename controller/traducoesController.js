@@ -18,13 +18,13 @@ export default {
       novasTraducoes.forEach(novaTraducao => {
         const { id, chave, pt, es, en, acao } = novaTraducao;
 
-        if (acao === 'excluido' || id !== chave) {
+        if (acao === 'excluir' || id !== chave) {
           delete traducoes.pt[id];
           delete traducoes.es[id];
           delete traducoes.en[id];
         }
 
-        if (acao !== 'excluido') {
+        if (acao !== 'excluir') {
           traducoes.pt[chave] = pt;
           traducoes.es[chave] = es;
           traducoes.en[chave] = en;

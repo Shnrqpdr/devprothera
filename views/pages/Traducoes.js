@@ -1,5 +1,6 @@
 import ModalTraducao from '/components/ModalTraducao.js';
 import Tabela from '/components/Tabela.js';
+const { useToast } = primevue.usetoast;
 
 const Traducoes = async () => {
   let template = await fetch("/pages/Traducoes.html");
@@ -10,19 +11,20 @@ const Traducoes = async () => {
     components: {
       "ModalTraducao": await ModalTraducao(),
       "Tabela": await Tabela(),
+      "p-button": primevue.button,
+      "p-toast": primevue.toast,
     },
     data () {
       return {
-        traducao: null,
         novasTraducoes: [],
-        traducoesIncompletas: [],
+        exibirModalTraducao: false,
+        toast: useToast(),
         tabela: {
-          cabecalho: [
-            { text: "Chave", value: "chave", sortable: true },
-            { text: "Português", value: "pt", sortable: true },
-            { text: "Inglês", value: "en", sortable: true },
-            { text: "Espanhol", value: "es", sortable: true },
-            { text: "Opções", value: "opcoes", sortable: false },
+          colunas: [
+            { header: "Chave", field: "chave", },
+            { header: "Português", field: "pt", },
+            { header: "Inglês", field: "en", },
+            { header: "Espanhol", field: "es", },
           ],
           itens: [],
         }
@@ -38,10 +40,8 @@ const Traducoes = async () => {
           es: traducoes.es[chave] || '',
           en: traducoes.en[chave] || '',
         }
-        this.verificarTraducao(linhaTraducao);
         this.tabela.itens.push(linhaTraducao);
       }
-      console.log("incompletas", this.traducoesIncompletas)
     },
     methods: {
       async buscarTraducoes () {
@@ -56,55 +56,60 @@ const Traducoes = async () => {
         const { traducoes } = await response.json();
         return traducoes;
       },
-      modalTraducaoFechado () {
-        this.traducao = null;
+      existeTraducao (item) {
+        return this.novasTraducoes.find(traducao => (traducao.chave === item.chave || traducao.id === item.id))
       },
-      verificarTraducao (traducao) {
-        Object.keys(traducao).forEach((idioma) => {
-          const mensagem = traducao[idioma];
-          if (mensagem === '') this.traducoesIncompletas.push({ chave: traducao.chave, idioma })
+      atualizarTraducao (event) {
+        const { data, newValue, field } = event;
+        const existeTraducao = this.existeTraducao(data);
+
+        data.acao = 'atualizar';
+
+        if (existeTraducao) {
+          existeTraducao[field] = newValue;
+        } else {
+          this.novasTraducoes.push(data);
+        }
+
+        this.toast.add({
+          severity: 'success',
+          summary: 'Tradução atualizada',
+          detail: `A tradução da chave ${data.chave} foi atualizada com sucesso.`,
+          life: 3000
         });
       },
       excluirTraducao (traducao) {
-        traducao.acao = 'excluido';
-
+        traducao.acao = 'excluir';
+        this.novasTraducoes.push(traducao);
         this.tabela.itens = this.tabela.itens.filter((linhaTraducao) => linhaTraducao.id !== traducao.id);
-
-        const traducaoNova = this.novasTraducoes.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-
-        if (traducaoNova) {
-          traducaoNova.acao = 'excluido';
-        } else {
-          this.novasTraducoes.push(traducao);
-        }
+        this.toast.add({
+          severity: 'success',
+          summary: 'Tradução excluída',
+          detail: `A tradução da chave ${traducao.chave} foi excluída com sucesso.`,
+          life: 3000
+        });
       },
-      editarTraducao (traducao) {
-        this.traducao = traducao;
-      },
-      salvarTraducao (traducao) {
-        if (traducao.id) {
-          const traducaoItem = this.tabela.itens.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-          traducaoItem.chave = traducao.chave;
-          traducaoItem.pt = traducao.pt;
-          traducaoItem.es = traducao.es;
-          traducaoItem.en = traducao.en;
+      adicionarTraducao (traducao) {
+        const novaTraducao = { ...traducao, id: traducao.chave, acao: 'adicionar' };
+        const existeTraducao = this.existeTraducao(novaTraducao) || this.tabela.itens.find(traducao => traducao.id === novaTraducao.id);
 
-          const novaTraducao = this.novasTraducoes.find((linhaTraducao) => linhaTraducao.id === traducao.id);
-          if (novaTraducao) {
-            novaTraducao.chave = traducao.chave;
-            novaTraducao.pt = traducao.pt;
-            novaTraducao.es = traducao.es;
-            novaTraducao.en = traducao.en;
-          } else {
-            this.novasTraducoes.push(traducao);
-          }
-        } else {
-          const novaTraducao = { ...traducao, id: traducao.chave, acao: 'adicionado' };
-          this.tabela.itens.unshift(novaTraducao);
-          this.novasTraducoes.push(novaTraducao);
-        }
+        if (existeTraducao)
+          return this.toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Já existe uma tradução com essa chave',
+            life: 3000
+          });
 
-        this.verificarTraducao(traducao);
+        this.tabela.itens.unshift(novaTraducao);
+        this.novasTraducoes.push(novaTraducao);
+        this.toast.add({
+          severity: 'success',
+          summary: 'Tradução inserida com sucesso',
+          detail: 'Uma nova tradução foi inserida',
+          life: 3000
+        });
+        this.exibirModalTraducao = false;
       },
       async salvarNovasTraducoes () {
         await fetch('/api/traducoes', {
@@ -118,7 +123,7 @@ const Traducoes = async () => {
 
         window.location.reload();
       }
-    }
+    },
   });
 }
 

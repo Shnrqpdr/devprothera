@@ -15,8 +15,8 @@ Auxilia no desenvolvimento do projeto prothera com a listagem de ícones svg e m
 - Node.js
 - Vue 3 - CDN
 - Vue-router 4 - CDN
-- Bootstrap 5 - CDN
-- Vue3-easy-data-table - CDN
+- PrimeVue - CDN
+- PrimeFlex - CDN
 
 ## Como utilizar
 
@@ -64,6 +64,6 @@ Request: [ {id: 'olaMundo', chave: 'olaMundo', pt: 'Olá Mundo', en: 'Hello Worl
 | `pt`      | `string` | A nova mensagem em português |
 | `en`      | `string` | A nova mensagem em inglês |
 | `es`      | `string` | A nova mensagem em espanhol |
-| `acao`      | `'excluido' \| 'adicionado' \| undefined` | Indicação de alteração da mensagem |
+| `acao`      | `'excluir' \| 'adicionar' \| atualizar` | Indicação de alteração da mensagem |
 
 

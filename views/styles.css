@@ -8,3 +8,7 @@ svg {
   width: 50px;
   fill: black;
 }
+
+.field > * {
+  display: block;
+}

@@ -1,25 +1,24 @@
-<main class="container-fluid p-5">
-  <ModalTraducao @salvar="salvarTraducao" v-model:traducao="traducao" @fechado="modalTraducaoFechado" />
+<main class="m-5">
+  <p-toast></p-toast>
 
-  <Tabela :cabecalho="tabela.cabecalho" :itens="tabela.itens" @editar="editarTraducao" @excluir="excluirTraducao" />
+  <ModalTraducao 
+    v-model:exibir="exibirModalTraducao" 
+    @salvar="adicionarTraducao" 
+    @fechar="exibirModalTraducao = false" />
 
-  <div class="my-5"></div>
+  <Tabela 
+    :colunas="tabela.colunas" 
+    :itens="tabela.itens" 
+    @aoEditar="atualizarTraducao" 
+    @aoExcluir="excluirTraducao" />
 
-  <section class="row fixed-bottom mx-5">
-    <div class="col-12 bg-white rounded-top p-3">
-      <div class="row">
-        <div class="col-auto hstack gap-2 mx-auto">
-          <button data-bs-toggle="modal" data-bs-target="#modalTraducao" class="btn btn-primary hstack gap-1">
-            <i class="material-icons">add</i>
-            Adicionar
-          </button>
-          <button id="btnSalvar" class="btn btn-success hstack gap-1" v-if="novasTraducoes.length"
-            @click="salvarNovasTraducoes">
-            <i class="material-icons">send</i>
-            Salvar
-          </button>
-        </div>
-      </div>
+  <div class="my-8"></div>
+
+  <section class="fixed bottom-0 left-0 w-full flex bg-white shadow-4 p-2 border-round-top">
+    <div class="mx-auto flex gap-3">
+      <p-button type="button" label="Adicionar" icon="pi pi-plus" @click="exibirModalTraducao = true" />
+      <p-button type="button" label="Salvar" icon="pi pi-send" :badge="novasTraducoes.length"
+        @click="salvarNovasTraducoes" />
     </div>
   </section>
 </main>

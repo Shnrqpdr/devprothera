@@ -6,24 +6,22 @@ const ModalTraducao = async () => {
 
   return ({
     template: template,
+    components: {
+      "p-dialog": primevue.dialog,
+      "p-button": primevue.button,
+      "p-inputtext": primevue.inputtext,
+    },
     props: {
+      exibir: { type: Boolean, required: true },
       traducao: { type: Object, default: null },
     },
     data () {
       return {
-        modal: null,
         chave: '',
         pt: '',
         en: '',
         es: '',
       }
-    },
-    mounted () {
-      this.modal = new bootstrap.Modal(document.getElementById('modalTraducao'));
-
-      document.getElementById('modalTraducao').addEventListener('hidden.bs.modal', () => {
-        this.$emit('fechado');
-      });
     },
     methods: {
       salvar () {
@@ -35,7 +33,6 @@ const ModalTraducao = async () => {
           en: this.en,
           es: this.es,
         });
-        this.modal.hide();
       },
       gerarChaveAutomatica () {
         let mensagem = primeiraLetraMinuscula(this.pt).split(' ');
@@ -43,25 +40,22 @@ const ModalTraducao = async () => {
           mensagem[i] = primeiraLetraMaiuscula(mensagem[i]);
         }
         this.chave = removerAcentos(mensagem.join(''));
+      },
+      fechar () {
+        this.$emit('fechar');
       }
     },
     watch: {
-      traducao: {
-        handler (traducao) {
-          this.chave = this.traducao?.chave || '';
-          this.pt = this.traducao?.pt || '';
-          this.en = this.traducao?.en || '';
-          this.es = this.traducao?.es || '';
-
-          if (traducao) {
-            this.modal?.show();
-          }
-        },
-        deep: true,
-        immediate: true,
+      exibir (valor) {
+        if (!valor) {
+          this.chave = '';
+          this.pt = '';
+          this.en = '';
+          this.es = '';
+        }
       }
     }
-  })
+  });
 }
 
 export default ModalTraducao;
