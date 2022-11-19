@@ -16,6 +16,7 @@ const Traducoes = async () => {
     },
     data () {
       return {
+        traducoesOriginais: [],
         novasTraducoes: [],
         exibirModalTraducao: false,
         toast: useToast(),
@@ -32,7 +33,7 @@ const Traducoes = async () => {
     },
     async mounted () {
       const traducoes = await this.buscarTraducoes();
-      for (const chave in traducoes.pt) {
+      for (const chave in traducoes?.pt) {
         const linhaTraducao = {
           id: chave,
           chave,
@@ -40,7 +41,8 @@ const Traducoes = async () => {
           es: traducoes.es[chave] || '',
           en: traducoes.en[chave] || '',
         }
-        this.tabela.itens.push(linhaTraducao);
+        this.tabela.itens.push({ ...linhaTraducao });
+        this.traducoesOriginais.push({ ...linhaTraducao });
       }
     },
     methods: {
@@ -56,14 +58,50 @@ const Traducoes = async () => {
         const { traducoes } = await response.json();
         return traducoes;
       },
-      existeTraducao (item) {
-        return this.novasTraducoes.find(traducao => (traducao.chave === item.chave || traducao.id === item.id))
+      existeChave (traducao) {
+        const mesmaChave = (item) => {
+          const temChave = item.chave === traducao.chave;
+          const naoEhMesmaLinha = item.id !== traducao.id;
+
+          if (traducao.acao === 'adicionar') {
+            return temChave;
+          } else {
+            return temChave && naoEhMesmaLinha;
+          }
+        };
+
+        var contagemChaves = this.tabela.itens.reduce((acumulador, item) => {
+          if (mesmaChave(item)) return acumulador + 1;
+          else return acumulador;
+        }, 0);
+
+        contagemChaves = this.novasTraducoes.reduce((acumulador, item) => {
+          if (mesmaChave(item)) return acumulador + 1
+          else return acumulador;
+        }, contagemChaves);
+
+        return contagemChaves;
       },
       atualizarTraducao (event) {
         const { data, newValue, field } = event;
-        const existeTraducao = this.existeTraducao(data);
+        const valorAntigo = data[field];
+        data[field] = newValue;
+
+        const existeChave = this.existeChave(data);
+
+        if (existeChave) {
+          data[field] = valorAntigo;
+          return this.toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Já existe uma tradução com essa chave',
+            life: 3000
+          });
+        }
 
         data.acao = 'atualizar';
+
+        const existeTraducao = this.novasTraducoes.find(traducao => traducao.id === data.id)
 
         if (existeTraducao) {
           existeTraducao[field] = newValue;
@@ -79,9 +117,14 @@ const Traducoes = async () => {
         });
       },
       excluirTraducao (traducao) {
-        traducao.acao = 'excluir';
-        this.novasTraducoes.push(traducao);
-        this.tabela.itens = this.tabela.itens.filter((linhaTraducao) => linhaTraducao.id !== traducao.id);
+        if (traducao.acao === 'adicionar') {
+          this.tabela.itens = this.tabela.itens.filter(item => item.id !== traducao.id);
+          this.novasTraducoes = this.novasTraducoes.filter(item => item.id !== traducao.id);
+        } else {
+          traducao.acao = 'excluir';
+          this.novasTraducoes.push(traducao);
+        }
+
         this.toast.add({
           severity: 'success',
           summary: 'Tradução excluída',
@@ -91,15 +134,16 @@ const Traducoes = async () => {
       },
       adicionarTraducao (traducao) {
         const novaTraducao = { ...traducao, id: traducao.chave, acao: 'adicionar' };
-        const existeTraducao = this.existeTraducao(novaTraducao) || this.tabela.itens.find(traducao => traducao.id === novaTraducao.id);
+        const existeChave = this.existeChave(novaTraducao);
 
-        if (existeTraducao)
+        if (existeChave) {
           return this.toast.add({
             severity: 'error',
             summary: 'Erro',
             detail: 'Já existe uma tradução com essa chave',
             life: 3000
           });
+        }
 
         this.tabela.itens.unshift(novaTraducao);
         this.novasTraducoes.push(novaTraducao);
@@ -110,6 +154,27 @@ const Traducoes = async () => {
           life: 3000
         });
         this.exibirModalTraducao = false;
+      },
+      desfazerAlteracao (traducao) {
+        const traducaoOriginal = this.traducoesOriginais.find(traducaoOriginal => traducaoOriginal.id === traducao.id);
+
+        if (traducaoOriginal) {
+          const traducaoIndex = this.tabela.itens.findIndex(traducao => traducao.id === traducaoOriginal.id);
+          traducao.pt = traducaoOriginal.pt;
+          traducao.en = traducaoOriginal.en;
+          traducao.es = traducaoOriginal.es;
+          delete traducao.acao;
+          this.tabela.itens[traducaoIndex] = traducao;
+        }
+
+        this.novasTraducoes = this.novasTraducoes.filter(traducaoNova => traducaoNova.id !== traducao.id);
+
+        this.toast.add({
+          severity: 'success',
+          summary: 'Alteração desfeita',
+          detail: `A tradução ${traducao.chave} voltou ao estado original.`,
+          life: 3000
+        });
       },
       async salvarNovasTraducoes () {
         await fetch('/api/traducoes', {

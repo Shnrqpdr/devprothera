@@ -9,6 +9,7 @@
   <Tabela 
     :colunas="tabela.colunas" 
     :itens="tabela.itens" 
+    @aoDesfazer="desfazerAlteracao"
     @aoEditar="atualizarTraducao" 
     @aoExcluir="excluirTraducao" />
 
@@ -17,7 +18,12 @@
   <section class="fixed bottom-0 left-0 w-full flex bg-white shadow-4 p-2 border-round-top">
     <div class="mx-auto flex gap-3">
       <p-button type="button" label="Adicionar" icon="pi pi-plus" @click="exibirModalTraducao = true" />
-      <p-button type="button" label="Salvar" icon="pi pi-send" :badge="novasTraducoes.length"
+      <p-button type="button" 
+        :badge="novasTraducoes.length" 
+        label="Salvar" 
+        icon="pi pi-send" 
+        class="p-button-success"
+        :disabled="!novasTraducoes.length" 
         @click="salvarNovasTraducoes" />
     </div>
   </section>

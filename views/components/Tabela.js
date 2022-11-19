@@ -1,5 +1,5 @@
 const { FilterMatchMode } = primevue.api;
-const { ref } = Vue;
+const { ref, computed } = Vue;
 
 const Tabela = async () => {
   let template = await fetch("/components/Tabela.html")
@@ -22,9 +22,30 @@ const Tabela = async () => {
 
       const traducaoSelecionada = ref();
 
-      const menuModelo = ref([
-        { label: 'Excluir linha', icon: 'pi pi-fw pi-times', command: () => excluir(traducaoSelecionada) }
-      ]);
+      const menuModelo = computed(() => {
+        const acao = traducaoSelecionada.value?.acao;
+        const menu = [];
+
+        if (!/excluir/.test(acao)) {
+          menu.push({ label: 'Excluir', icon: 'pi pi-fw pi-times', command: () => excluir(traducaoSelecionada) });
+        }
+
+        if (/atualizar|excluir/gi.test(acao)) {
+          menu.push({ label: 'Desfazer', icon: 'pi pi-fw pi-undo', command: () => desfazer(traducaoSelecionada) })
+        }
+
+        return menu
+      });
+
+      const corLinha = (linha) => {
+        if (linha.acao === 'adicionar') {
+          return 'text-primary';
+        } else if (linha.acao === 'excluir') {
+          return 'text-red-500';
+        } else if (linha.acao === 'atualizar') {
+          return 'text-green-300';
+        }
+      }
 
       const pesquisa = ref("");
 
@@ -40,7 +61,6 @@ const Tabela = async () => {
         const { data, newValue, field } = event;
 
         if (newValue.trim().length > 0 && newValue !== data[field]) {
-          data[field] = newValue;
           emit('aoEditar', event);
         }
       }
@@ -50,12 +70,18 @@ const Tabela = async () => {
         traducaoSelecionada.value = null;
       }
 
+      const desfazer = (event) => {
+        emit('aoDesfazer', traducaoSelecionada.value);
+        traducaoSelecionada.value = null;
+      }
+
       return {
         contextMenu,
         traducaoSelecionada,
         menuModelo,
         pesquisa,
         filtros,
+        corLinha,
         aoContextualizarMenuLinha,
         aoFinalizarEdicaoCelula,
         excluir,

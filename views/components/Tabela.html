@@ -24,6 +24,9 @@
   </template>
   <p-column v-for="col of colunas" :field="col.field" :header="col.header" :sortable="true" :key="col.field"
     style="width:25%">
+    <template #body="{ data, field }">
+      <div :class="corLinha(data)">{{ data[field] }}</div>
+    </template>
     <template #editor="{ data, field }">
       <p-inputtext class="w-full" v-model="data[field]" autofocus></p-inputtext>
     </template>
