@@ -1,5 +1,6 @@
 const { FilterMatchMode } = primevue.api;
 const { ref, computed } = Vue;
+import StatusTraducaoEnum from "/js/statusTraducaoENUM.js";
 
 const Tabela = async () => {
   let template = await fetch("/components/Tabela.html")
@@ -23,14 +24,14 @@ const Tabela = async () => {
       const traducaoSelecionada = ref();
 
       const menuModelo = computed(() => {
-        const acao = traducaoSelecionada.value?.acao;
+        const status = traducaoSelecionada.value?.status;
         const menu = [];
 
-        if (!/excluir/.test(acao)) {
+        if (status !== StatusTraducaoEnum.EXCLUIDO) {
           menu.push({ label: 'Excluir', icon: 'pi pi-fw pi-times', command: () => excluir(traducaoSelecionada) });
         }
 
-        if (/atualizar|excluir/gi.test(acao)) {
+        if (status === StatusTraducaoEnum.EDITADO || status === StatusTraducaoEnum.EXCLUIDO) {
           menu.push({ label: 'Desfazer', icon: 'pi pi-fw pi-undo', command: () => desfazer(traducaoSelecionada) })
         }
 
@@ -38,11 +39,11 @@ const Tabela = async () => {
       });
 
       const corLinha = (linha) => {
-        if (linha.acao === 'adicionar') {
+        if (linha.status === StatusTraducaoEnum.ADICIONADO) {
           return 'text-primary';
-        } else if (linha.acao === 'excluir') {
+        } else if (linha.status === StatusTraducaoEnum.EXCLUIDO) {
           return 'text-red-500';
-        } else if (linha.acao === 'atualizar') {
+        } else if (linha.status === StatusTraducaoEnum.EDITADO) {
           return 'text-green-300';
         }
       }

@@ -1,3 +1,4 @@
+import StatusTraducaoEnum from '/js/statusTraducaoENUM.js';
 import ModalTraducao from '/components/ModalTraducao.js';
 import Tabela from '/components/Tabela.js';
 const { useToast } = primevue.usetoast;
@@ -31,6 +32,12 @@ const Traducoes = async () => {
         }
       }
     },
+    computed: {
+      traducoesAlteradas () {
+        const traducoesAlteradas = this.tabela.itens.filter(traducao => traducao.status);
+        return traducoesAlteradas;
+      }
+    },
     async mounted () {
       const traducoes = await this.buscarTraducoes();
       for (const chave in traducoes?.pt) {
@@ -59,38 +66,23 @@ const Traducoes = async () => {
         return traducoes;
       },
       existeChave (traducao) {
-        const mesmaChave = (item) => {
-          const temChave = item.chave === traducao.chave;
-          const naoEhMesmaLinha = item.id !== traducao.id;
-
-          if (traducao.acao === 'adicionar') {
-            return temChave;
+        return this.tabela.itens.reduce((acumulador, item) => {
+          if (traducao.status === StatusTraducaoEnum.ADICIONADO) {
+            return item.chave === traducao.chave ? acumulador + 1 : acumulador;
           } else {
-            return temChave && naoEhMesmaLinha;
+            return item.chave === traducao.chave && item.id !== traducao.id ? acumulador + 1 : acumulador;
           }
-        };
-
-        var contagemChaves = this.tabela.itens.reduce((acumulador, item) => {
-          if (mesmaChave(item)) return acumulador + 1;
-          else return acumulador;
         }, 0);
-
-        contagemChaves = this.novasTraducoes.reduce((acumulador, item) => {
-          if (mesmaChave(item)) return acumulador + 1
-          else return acumulador;
-        }, contagemChaves);
-
-        return contagemChaves;
       },
       atualizarTraducao (event) {
-        const { data, newValue, field } = event;
-        const valorAntigo = data[field];
-        data[field] = newValue;
+        const { data: traducao, newValue: novoValor, field: coluna } = event;
+        const valorAntigo = traducao[coluna];
+        traducao[coluna] = novoValor;
 
-        const existeChave = this.existeChave(data);
+        const existeChave = this.existeChave(traducao);
 
         if (existeChave) {
-          data[field] = valorAntigo;
+          traducao[coluna] = valorAntigo;
           return this.toast.add({
             severity: 'error',
             summary: 'Erro',
@@ -99,32 +91,22 @@ const Traducoes = async () => {
           });
         }
 
-        data.acao = 'atualizar';
-
-        const existeTraducao = this.novasTraducoes.find(traducao => traducao.id === data.id)
-
-        if (existeTraducao) {
-          existeTraducao[field] = newValue;
-        } else {
-          this.novasTraducoes.push(data);
-        }
+        traducao.status = StatusTraducaoEnum.EDITADO;
+        traducao[coluna] = novoValor;
 
         this.toast.add({
           severity: 'success',
           summary: 'Tradução atualizada',
-          detail: `A tradução da chave ${data.chave} foi atualizada com sucesso.`,
+          detail: `A tradução da chave ${traducao.chave} foi atualizada com sucesso.`,
           life: 3000
         });
       },
       excluirTraducao (traducao) {
-        if (traducao.acao === 'adicionar') {
+        if (traducao.status === StatusTraducaoEnum.ADICIONADO) {
           this.tabela.itens = this.tabela.itens.filter(item => item.id !== traducao.id);
-          this.novasTraducoes = this.novasTraducoes.filter(item => item.id !== traducao.id);
-        } else {
-          traducao.acao = 'excluir';
-          this.novasTraducoes.push(traducao);
         }
 
+        traducao.status = StatusTraducaoEnum.EXCLUIDO;
         this.toast.add({
           severity: 'success',
           summary: 'Tradução excluída',
@@ -133,7 +115,7 @@ const Traducoes = async () => {
         });
       },
       adicionarTraducao (traducao) {
-        const novaTraducao = { ...traducao, id: traducao.chave, acao: 'adicionar' };
+        const novaTraducao = { ...traducao, id: traducao.chave, status: StatusTraducaoEnum.ADICIONADO };
         const existeChave = this.existeChave(novaTraducao);
 
         if (existeChave) {
@@ -146,7 +128,6 @@ const Traducoes = async () => {
         }
 
         this.tabela.itens.unshift(novaTraducao);
-        this.novasTraducoes.push(novaTraducao);
         this.toast.add({
           severity: 'success',
           summary: 'Tradução inserida com sucesso',
@@ -157,18 +138,8 @@ const Traducoes = async () => {
       },
       desfazerAlteracao (traducao) {
         const traducaoOriginal = this.traducoesOriginais.find(traducaoOriginal => traducaoOriginal.id === traducao.id);
-
-        if (traducaoOriginal) {
-          const traducaoIndex = this.tabela.itens.findIndex(traducao => traducao.id === traducaoOriginal.id);
-          traducao.pt = traducaoOriginal.pt;
-          traducao.en = traducaoOriginal.en;
-          traducao.es = traducaoOriginal.es;
-          delete traducao.acao;
-          this.tabela.itens[traducaoIndex] = traducao;
-        }
-
-        this.novasTraducoes = this.novasTraducoes.filter(traducaoNova => traducaoNova.id !== traducao.id);
-
+        const traducaoIndex = this.tabela.itens.findIndex(traducao => traducao.id === traducaoOriginal.id);
+        this.tabela.itens[traducaoIndex] = traducaoOriginal;
         this.toast.add({
           severity: 'success',
           summary: 'Alteração desfeita',
@@ -183,7 +154,7 @@ const Traducoes = async () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.novasTraducoes)
+          body: JSON.stringify(this.traducoesAlteradas)
         });
 
         window.location.reload();

@@ -3,16 +3,17 @@
   :rows-per-page-options="[10,20,50, 100]"
   :rows="10"
   :paginator="true" 
-  @cell-edit-complete="aoFinalizarEdicaoCelula"
-  context-menu 
   v-model:context-menu-selection="traducaoSelecionada" 
-  @row-contextmenu="aoContextualizarMenuLinha"
-  class="p-datatable-sm. editable-cells-table w-full"
-  edit-mode="cell" 
-  current-page-report-template="Exibindo de {first} a {last} de {totalRecords}" 
   v-model:filters="filtros" 
-  responsive-layout="scroll" 
+  @row-contextmenu="aoContextualizarMenuLinha"
+  @cell-edit-complete="aoFinalizarEdicaoCelula"
   paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+  class="p-datatable-sm. editable-cells-table w-full"
+  current-page-report-template="Exibindo de {first} a {last} de {totalRecords}" 
+  responsive-layout="scroll" 
+  edit-mode="cell" 
+  removable-sort
+  context-menu 
   >
   <template #header>
     <div class="flex justify-content-end">
@@ -22,6 +23,7 @@
       </span>
     </div>
   </template>
+  <template #filter></template>
   <p-column v-for="col of colunas" :field="col.field" :header="col.header" :sortable="true" :key="col.field"
     style="width:25%">
     <template #body="{ data, field }">
@@ -29,12 +31,6 @@
     </template>
     <template #editor="{ data, field }">
       <p-inputtext class="w-full" v-model="data[field]" autofocus></p-inputtext>
-    </template>
-    <template #empty>
-      Nenhuma tradução encontrada.
-    </template>
-    <template #loading>
-      Carregando...
     </template>
   </p-column>
 </p-datatable>
