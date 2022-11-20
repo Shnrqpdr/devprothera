@@ -1,5 +1,5 @@
 import StatusTraducaoEnum from '/js/statusTraducaoENUM.js';
-import { clonarObjeto } from '/js/utils.js';
+import { clonarObjeto, verificaTraducaoIncompleta } from '/js/utils.js';
 import ModalTraducao from '/components/ModalTraducao.js';
 import Tabela from '/components/Tabela.js';
 const { useToast } = primevue.usetoast;
@@ -23,7 +23,8 @@ const Traducoes = async () => {
         status: [
           { name: StatusTraducaoEnum.ADICIONADO, code: StatusTraducaoEnum.ADICIONADO },
           { name: StatusTraducaoEnum.EXCLUIDO, code: StatusTraducaoEnum.EXCLUIDO },
-          { name: StatusTraducaoEnum.EDITADO, code: StatusTraducaoEnum.EDITADO }
+          { name: StatusTraducaoEnum.EDITADO, code: StatusTraducaoEnum.EDITADO },
+          { name: StatusTraducaoEnum.INCOMPLETO, code: StatusTraducaoEnum.INCOMPLETO }
         ],
         statusSelecionados: [],
         toast: useToast(),
@@ -46,6 +47,10 @@ const Traducoes = async () => {
       itensTabela () {
         const arrayFiltroStatus = this.statusSelecionados.map(status => status.code);
 
+        console.log('teste adicionados: ', this.tabela.itens.filter(traducao => {
+          return arrayFiltroStatus.length ? arrayFiltroStatus.includes(traducao.status) : traducao;
+        }))
+
         return this.tabela.itens.filter(traducao => {
           return arrayFiltroStatus.length ? arrayFiltroStatus.includes(traducao.status) : traducao;
         });
@@ -53,6 +58,7 @@ const Traducoes = async () => {
     },
     async mounted () {
       const traducoes = await this.buscarTraducoes();
+
       for (const chave in traducoes?.pt) {
         const linhaTraducao = {
           id: chave,
@@ -61,8 +67,16 @@ const Traducoes = async () => {
           es: traducoes.es[chave] || '',
           en: traducoes.en[chave] || '',
         }
+         
+        linhaTraducao.status = verificaTraducaoIncompleta(linhaTraducao) ?
+        StatusTraducaoEnum.INCOMPLETO : StatusTraducaoEnum.COMPLETO;
+        
         this.tabela.itens.push(clonarObjeto(linhaTraducao));
       }
+
+      const traducoesIncompletas = this.tabela.itens.filter(traducao => !traducao.pt.length || !traducao.en.length || !traducao.es.length);
+
+      console.log('traducoes incompletas: ', traducoesIncompletas);
       this.traducoesOriginais = clonarObjeto(this.tabela.itens);
     },
     methods: {

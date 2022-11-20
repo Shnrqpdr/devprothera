@@ -22,10 +22,19 @@ function clonarObjeto (objeto) {
   return JSON.parse(JSON.stringify(objeto));
 }
 
+function verificaTraducaoIncompleta(traducao) {
+  if(!traducao.pt.length || !traducao.en.length || !traducao.es.length){
+    return true;
+  }
+
+  return false;
+}
+
 export {
   parseData,
   primeiraLetraMaiuscula,
   primeiraLetraMinuscula,
   removerAcentos,
-  clonarObjeto
+  clonarObjeto,
+  verificaTraducaoIncompleta
 }
