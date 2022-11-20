@@ -18,9 +18,8 @@ function removerAcentos (string) {
   return string.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-function objetoVazio (objeto) {
-  if (objeto === undefined) return {}
-  else return objeto;
+function clonarObjeto (objeto) {
+  return JSON.parse(JSON.stringify(objeto));
 }
 
 export {
@@ -28,5 +27,5 @@ export {
   primeiraLetraMaiuscula,
   primeiraLetraMinuscula,
   removerAcentos,
-  objetoVazio,
+  clonarObjeto
 }

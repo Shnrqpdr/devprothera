@@ -1,4 +1,5 @@
 import StatusTraducaoEnum from '/js/statusTraducaoENUM.js';
+import { clonarObjeto } from '/js/utils.js';
 import ModalTraducao from '/components/ModalTraducao.js';
 import Tabela from '/components/Tabela.js';
 const { useToast } = primevue.usetoast;
@@ -48,9 +49,9 @@ const Traducoes = async () => {
           es: traducoes.es[chave] || '',
           en: traducoes.en[chave] || '',
         }
-        this.tabela.itens.push({ ...linhaTraducao });
-        this.traducoesOriginais.push({ ...linhaTraducao });
+        this.tabela.itens.push(clonarObjeto(linhaTraducao));
       }
+      this.traducoesOriginais = clonarObjeto(this.tabela.itens);
     },
     methods: {
       async buscarTraducoes () {
@@ -139,7 +140,7 @@ const Traducoes = async () => {
       desfazerAlteracao (traducao) {
         const traducaoOriginal = this.traducoesOriginais.find(traducaoOriginal => traducaoOriginal.id === traducao.id);
         const traducaoIndex = this.tabela.itens.findIndex(traducao => traducao.id === traducaoOriginal.id);
-        this.tabela.itens[traducaoIndex] = traducaoOriginal;
+        this.tabela.itens[traducaoIndex] = clonarObjeto(traducaoOriginal);
         this.toast.add({
           severity: 'success',
           summary: 'Alteração desfeita',
