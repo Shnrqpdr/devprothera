@@ -19,7 +19,6 @@ const Traducoes = async () => {
     },
     data () {
       return {
-        traducoesOriginais: [],
         exibirModalTraducao: false,
         status: [
           { name: StatusTraducaoEnum.ADICIONADO, code: StatusTraducaoEnum.ADICIONADO },
@@ -46,6 +45,7 @@ const Traducoes = async () => {
       },
       itensTabela () {
         const arrayFiltroStatus = this.statusSelecionados.map(status => status.code);
+
         return this.tabela.itens.filter(traducao => {
           return arrayFiltroStatus.length ? arrayFiltroStatus.includes(traducao.status) : traducao;
         });

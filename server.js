@@ -10,6 +10,6 @@ app.use(express.static(path.join(dirname(''), "views")));
 
 app.use(router);
 
-app.listen(3000, () => {
-  console.log("server started on http://localhost:3000");
+app.listen(3030, () => {
+  console.log("server started on http://localhost:3030");
 });

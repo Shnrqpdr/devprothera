@@ -25,7 +25,10 @@ const ModalTraducao = async () => {
     },
     methods: {
       salvar () {
-        if (!(this.chave && this.pt)) return;
+        if (!(this.chave && this.pt)){
+          return;
+        } 
+        
         this.$emit('salvar', {
           id: this.traducao?.id,
           chave: this.chave,

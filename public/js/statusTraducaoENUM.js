@@ -1,7 +1,7 @@
 const StatusTraducaoEnum = Object.freeze({
-  ADICIONADO : 'adicionado',
-  EXCLUIDO : 'excluido',
-  EDITADO: 'editado',
+  ADICIONADO : 'Adicionado',
+  EXCLUIDO : 'Excluido',
+  EDITADO: 'Editado',
 });
 
 export default StatusTraducaoEnum;

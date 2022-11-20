@@ -3,7 +3,10 @@
   v-model:visible="exibir" 
   :breakpoints="{'960px': '75vw', '640px': '90vw'}"
   :style="{width: '50vw'}" 
-  :maximizable="true" :modal="true">
+  :closable="false"
+  :maximizable="true"
+  :modal="true"
+>
   <form id="formularioNovaTraducao">
     <div class="field mb-3">
       <label for="inputChave">Chave<span class="text-danger">*</span></label>
@@ -29,3 +32,9 @@
     <p-button type="submit" label="Inserir" icon="pi pi-check" @click="salvar" autofocus></p-button>
   </template>
 </p-dialog>
+
+<style scoped>
+  .p-dialog-header-close {
+    display: none;
+  }
+</style>
