@@ -15,12 +15,18 @@ const Traducoes = async () => {
       "Tabela": await Tabela(),
       "p-button": primevue.button,
       "p-toast": primevue.toast,
+      "p-multiselect": primevue.multiselect
     },
     data () {
       return {
         traducoesOriginais: [],
-        novasTraducoes: [],
         exibirModalTraducao: false,
+        status: [
+          { name: StatusTraducaoEnum.ADICIONADO, code: StatusTraducaoEnum.ADICIONADO },
+          { name: StatusTraducaoEnum.EXCLUIDO, code: StatusTraducaoEnum.EXCLUIDO },
+          { name: StatusTraducaoEnum.EDITADO, code: StatusTraducaoEnum.EDITADO }
+        ],
+        statusSelecionados: [],
         toast: useToast(),
         tabela: {
           colunas: [
@@ -37,6 +43,12 @@ const Traducoes = async () => {
       traducoesAlteradas () {
         const traducoesAlteradas = this.tabela.itens.filter(traducao => traducao.status);
         return traducoesAlteradas;
+      },
+      itensTabela () {
+        const arrayFiltroStatus = this.statusSelecionados.map(status => status.code);
+        return this.tabela.itens.filter(traducao => {
+          return arrayFiltroStatus.length ? arrayFiltroStatus.includes(traducao.status) : traducao;
+        });
       }
     },
     async mounted () {

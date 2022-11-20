@@ -6,9 +6,17 @@
     @salvar="adicionarTraducao" 
     @fechar="exibirModalTraducao = false" />
 
+  <p-multiselect 
+    v-model="statusSelecionados" 
+    :options="status" 
+    option-label="name" 
+    placeholder="Filtrar por status" 
+    class="mb-4"
+    display="chip"></p-multiselect>
+  
   <Tabela 
     :colunas="tabela.colunas" 
-    :itens="tabela.itens" 
+    :itens="itensTabela" 
     @aoDesfazer="desfazerAlteracao"
     @aoEditar="atualizarTraducao" 
     @aoExcluir="excluirTraducao" />
